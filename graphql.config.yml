@@ -1,0 +1,33 @@
+overwrite: true
+schema: server/graphql/schema.graphql
+extensions:
+  codegen:
+    hooks:
+      afterAllFileWrite:
+        - prettier --write
+    generates:
+      ./server/graphql/generated/graphql.ts:
+        documents:
+          - 'server/**/*.ts'
+          - '!**/generated'
+        plugins:
+          - typescript
+          - typescript-resolvers
+        config:
+          mapperTypeSuffix: Model
+          mappers:
+            Space: '@prisma/client#Space'
+            Counter: '@prisma/client#Counter'
+      ./server/__tests__/generated:
+        documents:
+          - 'server/__tests__/**/*.spec.ts'
+          - '!**/generated'
+        preset: gql-tag-operations-preset
+      ./src/generated/graphql.ts:
+        documents:
+          - 'src/**/*.ts'
+          - '!**/generated'
+        plugins:
+          - typescript
+          - typescript-operations
+          - typescript-react-apollo
